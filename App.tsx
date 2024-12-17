@@ -23,6 +23,27 @@ export default function App() {
             <Text style={styles.deckButtonText}>Choisir</Text>
           </TouchableOpacity>
         </View>
+        <View style={styles.deckCard}>
+          <Text style={styles.deckTitle}>Croisantes</Text>
+          <Text style={styles.deckInfo}>19 cartes</Text>
+          <TouchableOpacity style={styles.deckButton}>
+            <Text style={styles.deckButtonText}>Choisir</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.deckCard}>
+          <Text style={styles.deckTitle}>P1 écpise</Text>
+          <Text style={styles.deckInfo}>25 cartes</Text>
+          <TouchableOpacity style={styles.deckButton}>
+            <Text style={styles.deckButtonText}>Choisir</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.deckCard}>
+          <Text style={styles.deckTitle}>Margerit</Text>
+          <Text style={styles.deckInfo}>18 cartes</Text>
+          <TouchableOpacity style={styles.deckButton}>
+            <Text style={styles.deckButtonText}>Choisir</Text>
+          </TouchableOpacity>
+        </View>
         {/* Duplicate the deckCard component for the remaining decks */}
       </View>
     </View>

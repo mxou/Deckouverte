@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: '#4B2E83',
+    color: '#36206D',
     marginBottom: 20,
   },
   searchInput: {
@@ -27,8 +27,12 @@ const styles = StyleSheet.create({
   },
   deckContainer: {
     width: '100%',
+    flexDirection: 'row',   // Affiche les éléments en ligne
+    flexWrap: 'wrap',       // Permet le retour à la ligne
+    justifyContent: 'space-between', // Espace égal entre les cartes
   },
   deckCard: {
+    width: '48%',           // 48% pour avoir un espace entre les colonnes
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 16,
