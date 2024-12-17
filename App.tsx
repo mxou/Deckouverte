@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'; 
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { Link } from 'expo-router';
+
 import styles from './assets/styles/style.js';
 import logo from './assets/img/logo_deckouverte.png';
 import { fetchData } from './src/api'; 
@@ -95,7 +97,7 @@ if (error) {
 
             <Text>{deck.nb_cartes}</Text> 
             {/* Affichage du nombres de cartes du deck */}
-            {/* <Link href={`https://srochedix.alwaysdata.net/ReignApi/api/v1/cartes/createur/${deck.id_deck}`}>Voir les cartes</Link> */}
+            <Link style={styles.playButton} href={`https://srochedix.alwaysdata.net/ReignApi/api/v1/cartes/createur/${deck.id_deck}`}>Jouer</Link>
           </View>
         ))
       ) : ( 

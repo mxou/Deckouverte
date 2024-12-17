@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
     paddingVertical: 40,
-    position: 'relative', // Par défaut, mais assure un bon positionnement
+    position: 'relative', 
   },
   title: {
     fontSize: 30,
@@ -27,9 +27,9 @@ const styles = StyleSheet.create({
   },
   deckContainer: {
     width: '100%',
-    flexDirection: 'row',   // Affiche les éléments en ligne
-    flexWrap: 'wrap',       // Permet le retour à la ligne
-    justifyContent: 'space-between', // Espace égal entre les cartes
+    flexDirection: 'row',   
+    flexWrap: 'wrap',       
+    justifyContent: 'space-between', 
   },
   deckCard: {
     width: '48%',           // 48% pour avoir un espace entre les colonnes
@@ -60,6 +60,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     fontWeight: 'bold',
+  },
+  playButton: {
+    backgroundColor: '#E8407C',
+    padding: 9,
+    borderRadius: 8,
+    color: 'white',
+    fontWeight: 600,
   },
   logo: {
     position: 'absolute', 
