@@ -1,0 +1,19 @@
+
+// DEMARRER LE PROJET REACT NATIVE AVEC EXPO //
+
+Step 1 : Ouvrir un cmd pour creer le projet avec react native avec la commande 'npx create-expo-app Deckouverte -t'
+
+(Expo c'est le framework pour dev des applis avec react native sans avoir besoin de Xcode ou android studio, y a une appli Expo Go pour check son projet depuis
+son téléphone directement)
+
+Step 2 : Choisir le template 'Blank (TypeScript)' pour avoir un template vierge avec TS 
+
+Step 3 : Faire un 'cd Deckouverte' dans le cmd puis 'code .' pour l'ouvrir dans vsc
+
+Step 4 : Dans le terminal vsc rentrer 'npx expo install react-dom react-native-web @expo/metro-runtime' pour pouvoir
+lancer le serveur sur le navigateur sans avoir a utiliser d'émulateur android ou IOS
+
+Step 5 : Taper 'npm run web' dans le terminal vsc pour lancer app.tsx
+
+// DEMARRER LE PROJET REACT NATIVE AVEC EXPO //
+
