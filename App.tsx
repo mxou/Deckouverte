@@ -69,13 +69,13 @@ if (error) {
       />
 
       <View style={styles.deckContainer}>
-        <View style={styles.deckCard}>
+        {/* <View style={styles.deckCard}>
           <Text style={styles.deckTitle}>Croisan</Text>
           <Text style={styles.deckInfo}>12 cartes</Text>
           <TouchableOpacity style={styles.deckButton}>
             <Text style={styles.deckButtonText}>Choisir</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
        
       <ScrollView contentContainerStyle={styles.deckContainer}>
       {/* Utilisation d'un conteneur défilable pour afficher les données */}
@@ -97,7 +97,8 @@ if (error) {
 
             <Text>{deck.nb_cartes}</Text> 
             {/* Affichage du nombres de cartes du deck */}
-            <Link style={styles.playButton} href={`https://srochedix.alwaysdata.net/ReignApi/api/v1/cartes/createur/${deck.id_deck}`}>Jouer</Link>
+            <Link style={styles.playButton} href={`/cartes/${deck.id_deck}`}>Jouer</Link>
+
           </View>
         ))
       ) : ( 
