@@ -15,7 +15,8 @@ export default function CartesScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
+useEffect(() => {
+  if (id) {
     fetchData(`https://srochedix.alwaysdata.net/ReignApi/api/v1/cartes/deck/${id}`)
       .then((result) => {
         if (result.status === 'success' && Array.isArray(result.cartes)) {
@@ -26,7 +27,8 @@ export default function CartesScreen() {
       })
       .catch((err) => setError(err))
       .finally(() => setLoading(false));
-  }, [id]);
+  }
+}, [id]);
 
   if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
   if (error) return <Text style={styles.errorText}>Error: {error.message}</Text>;
