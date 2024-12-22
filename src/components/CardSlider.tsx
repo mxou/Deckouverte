@@ -30,21 +30,31 @@ export default function CardSlider({ cards }: CardSliderProps) {
 
   const translateX = useSharedValue(0);
 
-  // 🆕 Réinitialiser les stats au début de la partie
+  // Réinitialiser les stats au début de la partie
   useEffect(() => {
     resetStats();
     setCurrentIndex(0); // Remet le deck au début
-    setIsGameWon(false); // Réinitialise l'état de victoire
+    setIsGameWon(false); // Réinitialise l'état de win
     setSwipeText('');
   }, [cards]);
 
   const handleSwipeComplete = (direction: 'left' | 'right') => {
     if (direction === 'left') {
       const { population, finances } = cards[currentIndex].valeurs_choix1;
-      updateStats(population, finances);
+       if (population < 45 || finances < 45) {
+        console.log("perdu looser");
+        updateStats(population, finances);
+    } else {
+          updateStats(population, finances);
+      }
     } else if (direction === 'right') {
       const { population, finances } = cards[currentIndex].valeurs_choix2;
-      updateStats(population, finances);
+      if (population < 45 || finances < 45) {
+        console.log("perdu looser");
+        updateStats(population, finances);
+    } else {
+          updateStats(population, finances);
+      }
     }
 
     setSwipeText('');
@@ -113,8 +123,8 @@ export default function CardSlider({ cards }: CardSliderProps) {
       </View>
 
       <View style={styles.statsContainer}>
-        <Text style={styles.statsText}>Population: {stats.population}</Text>
-        <Text style={styles.statsText}>Finances: {stats.finances}</Text>
+        <Text style={styles.statsText}>👫​ Population: {stats.population}</Text>
+        <Text style={styles.statsText}>💸​ Finances: {stats.finances}</Text>
       </View>
     </View>
   );
