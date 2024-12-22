@@ -2,18 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { fetchData } from '../../src/api';
+
+import Header from '../../src/components/Header';
 import CardSlider from '../../src/components/CardSlider';
 import styles from './../../assets/styles/carte_style.js';
 
 type Card = {
   id_carte: number;
   texte_carte: string;
+  valeurs_choix1: { texte: string; population: number; finances: number };
+  valeurs_choix2: { texte: string; population: number; finances: number };
 };
 
 export default function CartesScreen() {
   const { id } = useLocalSearchParams(); // Récupère l'ID du deck depuis l'URL
   console.log(id);
   const [cards, setCards] = useState<Card[]>([]);
+  const [deckTitle, setDeckTitle] = useState<string>(''); // Ajout du titre
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -29,6 +34,7 @@ export default function CartesScreen() {
         console.log('Réponse API :', result);
         if (result.status === 'success' && result.deck && Array.isArray(result.deck.cartes)) {
           setCards(result.deck.cartes);
+          setDeckTitle(result.deck.titre_deck || 'Deck Inconnu'); //Récupération du titre
         } else {
           setError(new Error("Les données renvoyées par l'API ne sont pas valides."));
         }
@@ -42,7 +48,8 @@ export default function CartesScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Cartes du deck</Text>
+      <Header />
+      <Text style={styles.title}>{deckTitle}</Text>
       {cards.length > 0 ? (
         <CardSlider cards={cards} />
       ) : (

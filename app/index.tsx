@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image,  Pressable, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 
+import Header from '../src/components/Header';
 import styles from '../assets/styles/style.js';
 import logo from '../assets/img/logo_deckouverte.png';
 import { fetchData } from '../src/api'; 
@@ -61,7 +62,8 @@ if (error) {
 
   return (
     <View style={styles.container}>
-      <Image source={logo} style={styles.logo} />
+      {/* <Image source={logo} style={styles.logo} /> */}
+      <Header/>
       <Text style={styles.title}>Choisissez le deck que <Text style={{color: '#D2367A' }}>vous voulez jouer</Text></Text>
       <TextInput
         style={styles.searchInput}

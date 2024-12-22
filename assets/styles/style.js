@@ -68,16 +68,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 600,
   },
-  logo: {
-    position: 'absolute', 
-    top: 15,              
-    left: 10,             
-    width: 230,             
-    height: 80,            
-    resizeMode: 'contain', // Conserve les proportions de l'image
-    // borderWidth: 2,
-    // borderColor: 'black',
-},
 
 });
 
