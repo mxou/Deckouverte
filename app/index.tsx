@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'; 
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
-import { Link } from 'expo-router';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image,  Pressable, ScrollView } from 'react-native';
+import { Link, useRouter } from 'expo-router';
 
 import styles from '../assets/styles/style.js';
 import logo from '../assets/img/logo_deckouverte.png';
 import { fetchData } from '../src/api'; 
 
 
-export default function HomePage() {
+export default function App() {
+
 
    type Deck = { 
     id_deck: number; 
@@ -69,13 +70,6 @@ if (error) {
       />
 
       <View style={styles.deckContainer}>
-        {/* <View style={styles.deckCard}>
-          <Text style={styles.deckTitle}>Croisan</Text>
-          <Text style={styles.deckInfo}>12 cartes</Text>
-          <TouchableOpacity style={styles.deckButton}>
-            <Text style={styles.deckButtonText}>Choisir</Text>
-          </TouchableOpacity>
-        </View> */}
        
       <ScrollView contentContainerStyle={styles.deckContainer}>
       {/* Utilisation d'un conteneur défilable pour afficher les données */}
@@ -106,8 +100,6 @@ if (error) {
         // Message d'erreur alternatif si les données ne sont pas un tableau.
       )}
     </ScrollView>
-
-        {/* Duplicate the deckCard component for the remaining decks */}
       </View>
     </View>
   );

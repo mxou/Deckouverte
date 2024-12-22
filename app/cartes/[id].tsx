@@ -1,52 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { fetchData } from '../../src/api';
+import CardSlider from '../../src/components/CardSlider';
 import styles from './../../assets/styles/carte_style.js';
 
 type Card = {
   id_carte: number;
-  contenu: string;
+  texte_carte: string;
 };
 
 export default function CartesScreen() {
   const { id } = useLocalSearchParams(); // Récupère l'ID du deck depuis l'URL
+  console.log(id);
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-useEffect(() => {
-  if (id) {
+  useEffect(() => {
+    if (!id) {
+      setError(new Error("ID du deck manquant."));
+      setLoading(false);
+      return;
+    }
+    
     fetchData(`https://srochedix.alwaysdata.net/ReignApi/api/v1/cartes/deck/${id}`)
       .then((result) => {
-        if (result.status === 'success' && Array.isArray(result.cartes)) {
-          setCards(result.cartes);
+        console.log('Réponse API :', result);
+        if (result.status === 'success' && result.deck && Array.isArray(result.deck.cartes)) {
+          setCards(result.deck.cartes);
         } else {
           setError(new Error("Les données renvoyées par l'API ne sont pas valides."));
         }
       })
       .catch((err) => setError(err))
       .finally(() => setLoading(false));
-  }
-}, [id]);
+  }, [id]);
 
-  if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
+  if (loading) return <ActivityIndicator size="large" color="#fc035e" />;
   if (error) return <Text style={styles.errorText}>Error: {error.message}</Text>;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>Cartes du deck</Text>
       {cards.length > 0 ? (
-        cards.map((card) => (
-          <View key={card.id_carte} style={styles.card}>
-            <Text style={styles.cardText}>{card.contenu}</Text>
-          </View>
-        ))
+        <CardSlider cards={cards} />
       ) : (
         <Text style={styles.noCardsText}>Aucune carte disponible pour ce deck.</Text>
       )}
-    </ScrollView>
+    </View>
   );
 }
-
-
