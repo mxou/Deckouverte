@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import "react-native-reanimated";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   runOnJS,
+  useAnimatedGestureHandler,
 } from 'react-native-reanimated';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useGame } from '../context/GameContext';
 
 type Card = {
@@ -33,28 +35,18 @@ export default function CardSlider({ cards }: CardSliderProps) {
   // Réinitialiser les stats au début de la partie
   useEffect(() => {
     resetStats();
-    setCurrentIndex(0); // Remet le deck au début
-    setIsGameWon(false); // Réinitialise l'état de win
+    setCurrentIndex(0);
+    setIsGameWon(false);
     setSwipeText('');
   }, [cards]);
 
   const handleSwipeComplete = (direction: 'left' | 'right') => {
     if (direction === 'left') {
       const { population, finances } = cards[currentIndex].valeurs_choix1;
-       if (population < 45 || finances < 45) {
-        console.log("perdu looser");
-        updateStats(population, finances);
-    } else {
-          updateStats(population, finances);
-      }
+      updateStats(population, finances);
     } else if (direction === 'right') {
       const { population, finances } = cards[currentIndex].valeurs_choix2;
-      if (population < 45 || finances < 45) {
-        console.log("perdu looser");
-        updateStats(population, finances);
-    } else {
-          updateStats(population, finances);
-      }
+      updateStats(population, finances);
     }
 
     setSwipeText('');
@@ -70,27 +62,28 @@ export default function CardSlider({ cards }: CardSliderProps) {
     translateX.value = 0;
   };
 
-  const panGesture = Gesture.Pan()
-    .onUpdate((event) => {
+  const panGesture = useAnimatedGestureHandler({
+    onActive: (event) => {
       translateX.value = event.translationX;
-      if (event.translationX > 50) {
-        setSwipeText(cards[currentIndex]?.valeurs_choix2?.texte || '');
-      } else if (event.translationX < -50) {
-        setSwipeText(cards[currentIndex]?.valeurs_choix1?.texte || '');
-      } else {
-        setSwipeText('');
-      }
-    })
-    .onEnd((event) => {
+      runOnJS(setSwipeText)(
+        event.translationX > 50
+          ? cards[currentIndex]?.valeurs_choix2?.texte || ''
+          : event.translationX < -50
+          ? cards[currentIndex]?.valeurs_choix1?.texte || ''
+          : ''
+      );
+    },
+    onEnd: (event) => {
       if (event.translationX < -100) {
         runOnJS(handleSwipeComplete)('left');
       } else if (event.translationX > 100) {
         runOnJS(handleSwipeComplete)('right');
       } else {
         translateX.value = withSpring(0);
-        setSwipeText('');
+        runOnJS(setSwipeText)('');
       }
-    });
+    },
+  });
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -99,17 +92,17 @@ export default function CardSlider({ cards }: CardSliderProps) {
   });
 
   return (
-    <View style={styles.mainContainer}>
+    <GestureHandlerRootView style={styles.mainContainer}>
       <View style={styles.container}>
         {isGameWon ? (
           <Text style={styles.winText}>🎉 Gagné ! 🎉</Text>
         ) : cards[currentIndex] ? (
           <>
-            <GestureDetector gesture={panGesture}>
+            <PanGestureHandler onGestureEvent={panGesture}>
               <Animated.View style={[styles.card, animatedStyle]}>
                 <Text style={styles.cardText}>{cards[currentIndex].texte_carte}</Text>
               </Animated.View>
-            </GestureDetector>
+            </PanGestureHandler>
 
             {swipeText !== '' && (
               <View style={styles.swipeTextContainer}>
@@ -126,7 +119,7 @@ export default function CardSlider({ cards }: CardSliderProps) {
         <Text style={styles.statsText}>👫​ Population: {stats.population}</Text>
         <Text style={styles.statsText}>💸​ Finances: {stats.finances}</Text>
       </View>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 

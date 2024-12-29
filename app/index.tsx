@@ -23,29 +23,31 @@ export default function App() {
   const [error, setError] = useState<Error | null>(null); 
   // Déclaration de l'état `error`, initialisé à `null`, qui contiendra une erreur en cas de problème avec l'API.
 
-  useEffect(() => { 
+useEffect(() => { 
   fetchData('https://srochedix.alwaysdata.net/ReignApi/api/v1/decks')
     .then((result) => { 
       console.log('API Response:', result);
       if (result.status === 'success' && Array.isArray(result.decks)) {
-        setData(result.decks); // On utilise la clé `decks` de la réponse.
+        setData(result.decks); 
       } else {
         setError(new Error("Les données renvoyées par l'API ne sont pas valides."));
       }
     })
-    .catch((err) => setError(err));
+    .catch((err) => {
+      console.error('API Error:', err);  // Affiche l'erreur complète dans la console pour le débogage
+      setError(err);
+    });
 }, []);
 
-if (error) { 
-    // Vérification si une erreur existe.
 
-    return ( 
-      <View style={styles.container}> 
-        <Text>Error: {error.message}</Text> 
-      </View>
-        // Affichage d'un message d'erreur si l'état `error` est non nul.
-    ); 
-  }
+if (error) { 
+  return ( 
+    <View style={styles.container}> 
+      <Text style={{ color: 'red' }}>Error: {error.message}</Text>
+      <Text style={{ color: 'red' }}>Stack Trace: {error.stack}</Text>
+    </View>
+  );
+}
 
   if (!data) { 
     // Vérification si les données ne sont pas encore disponibles (`data` est toujours `null`).

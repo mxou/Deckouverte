@@ -1,17 +1,12 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
-import HomeButton from './HomeButton'; // Importation du bouton Accueil
+import { View, StyleSheet } from 'react-native';
+import HomeButton from './HomeButton';
+import Logo from './../../assets/img/logo_deckouverte.svg'; // Import direct du fichier SVG
 
 const Header = () => {
   return (
     <View style={styles.headerContainer}>
-      {/* Logo */}
-      <Image
-        source={require('./../../assets/img/logo_deckouverte.svg')}
-        style={styles.logo}
-        resizeMode="contain"
-      />
-      {/* Bouton Retour Accueil */}
+      <Logo width={230} height={80} />
       <HomeButton />
     </View>
   );
@@ -25,12 +20,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     elevation: 5,
-  },
-  logo: {
-    width: 230,             
-    height: 80, 
-    marginBottom: 5,
-     resizeMode: 'contain',
   },
 });
 

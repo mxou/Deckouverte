@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { fetchData } from '../../src/api';
+import "react-native-reanimated";
 
 import Header from '../../src/components/Header';
 import CardSlider from '../../src/components/CardSlider';
