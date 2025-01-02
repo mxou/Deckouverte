@@ -24,11 +24,17 @@ interface CardSliderProps {
   cards: Card[];
 }
 
+// ✅ Fonction pour générer une couleur aléatoire
+const getRandomColor = () => {
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+};
+
 export default function CardSlider({ cards }: CardSliderProps) {
   const { stats, updateStats, resetStats } = useGame();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isGameWon, setIsGameWon] = useState(false);
   const [swipeText, setSwipeText] = useState('');
+  const [bgColor, setBgColor] = useState(getRandomColor());
 
   const translateX = useSharedValue(0);
 
@@ -38,6 +44,7 @@ export default function CardSlider({ cards }: CardSliderProps) {
     setCurrentIndex(0);
     setIsGameWon(false);
     setSwipeText('');
+    setBgColor(getRandomColor());
   }, [cards]);
 
   const handleSwipeComplete = (direction: 'left' | 'right') => {
@@ -56,6 +63,7 @@ export default function CardSlider({ cards }: CardSliderProps) {
         setIsGameWon(true);
         return prevIndex;
       }
+      setBgColor(getRandomColor()); // Change la couleur pour la prochaine carte
       return nextIndex;
     });
 
@@ -99,7 +107,7 @@ export default function CardSlider({ cards }: CardSliderProps) {
         ) : cards[currentIndex] ? (
           <>
             <PanGestureHandler onGestureEvent={panGesture}>
-              <Animated.View style={[styles.card, animatedStyle]}>
+              <Animated.View style={[styles.card, animatedStyle, { backgroundColor: bgColor }]}>
                 <Text style={styles.cardText}>{cards[currentIndex].texte_carte}</Text>
               </Animated.View>
             </PanGestureHandler>
@@ -157,7 +165,7 @@ const styles = StyleSheet.create({
   card: {
     width: width * 0.8,
     height: 300,
-    backgroundColor: '#fff',
+    backgroundColor: '#eb4034',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',

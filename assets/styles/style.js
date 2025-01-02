@@ -50,6 +50,11 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 12,
   },
+  deckLikes: {
+    position: 'absolute',
+    top: 5,
+    left: 5,
+  },
   deckButton: {
     backgroundColor: '#E8407C',
     borderRadius: 8,

@@ -16,6 +16,7 @@ export default function App() {
     titre_deck: string; 
     date_fin_deck: string; 
     nb_cartes: string; 
+    nb_jaime: number;
   }; 
     const [data, setData] = useState<Deck[] | null>(null); 
   // Déclaration de l'état `data`, initialisé à `null`, qui contiendra un tableau de tricks ou `null` s'il n'y a pas de données.
@@ -95,6 +96,9 @@ if (error) {
 
             <Text>{deck.nb_cartes}</Text> 
             {/* Affichage du nombres de cartes du deck */}
+
+             <Text style={styles.deckLikes}>{deck.nb_jaime}❤️</Text> 
+            {/* Affichage du nombres de likes du deck */}
             <Link style={styles.playButton} href={`/cartes/${deck.id_deck}`}>Jouer</Link>
 
           </View>
