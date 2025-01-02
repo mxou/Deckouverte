@@ -45,7 +45,7 @@ export default function CartesScreen() {
   }, [id]);
 
   if (loading) return <ActivityIndicator size="large" color="#fc035e" />;
-  if (error) return <Text style={styles.errorText}>Error: {error.message}</Text>;
+  if (error) return <Text style={styles.errorText}>Errore: {error.message}</Text>;
 
   return (
     <View style={styles.container}>
