@@ -25,7 +25,7 @@ export default function App() {
   // Déclaration de l'état `error`, initialisé à `null`, qui contiendra une erreur en cas de problème avec l'API.
 
 useEffect(() => { 
-  fetchData('https://srochedix.alwaysdata.net/ReignApi/api/v1/decks/playable')
+  fetchData('https://srochedix.alwaysdata.net/ReignApi/api/v1/decks')
     .then((result) => { 
       console.log('API Response:', result);
       if (result.status === 'success' && Array.isArray(result.decks)) {

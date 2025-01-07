@@ -9,8 +9,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: '900',
     marginBottom: 20,
+    color: '#D2367A',
   },
   card: {
     backgroundColor: '#f8f8f8',

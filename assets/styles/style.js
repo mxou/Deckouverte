@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFD2D2',
+    backgroundColor: '#FFE5E5',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   playButton: {
-    backgroundColor: '#E8407C',
+    backgroundColor: '#D2367A',
     padding: 9,
     borderRadius: 8,
     color: 'white',
