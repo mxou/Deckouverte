@@ -23,6 +23,8 @@ export default function App() {
 
   const [error, setError] = useState<Error | null>(null); 
   // Déclaration de l'état `error`, initialisé à `null`, qui contiendra une erreur en cas de problème avec l'API.
+    const [searchQuery, setSearchQuery] = useState(''); 
+  // État pour la recherche
 
 useEffect(() => { 
   fetchData('https://srochedix.alwaysdata.net/ReignApi/api/v1/decks')
@@ -61,6 +63,10 @@ if (error) {
     ); 
   }
 
+    const filteredDecks = data.filter((deck) => 
+    deck.titre_deck.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
 
 
   return (
@@ -68,46 +74,32 @@ if (error) {
       {/* <Image source={logo} style={styles.logo} /> */}
       <Header/>
       <Text style={styles.title}>Choisissez le deck que <Text style={{color: '#D2367A' }}>vous voulez jouer</Text></Text>
+       {/* Search Bar */}
       <TextInput
         style={styles.searchInput}
         placeholder="Rechercher par nom de deck..."
         placeholderTextColor="#666"
+        value={searchQuery}
+        onChangeText={(text) => setSearchQuery(text)}
       />
 
       <View style={styles.deckContainer}>
        
-      <ScrollView contentContainerStyle={styles.deckContainer}>
-      {/* Utilisation d'un conteneur défilable pour afficher les données */}
-
-      {Array.isArray(data) ? ( 
-        // Vérification que `data` est bien un tableau.
-
-        data.map((deck: Deck) => ( 
-          // Boucle sur chaque élément du tableau pour générer une vue correspondante.
-
-          <View key={deck.id_deck} style={styles.deckCard}> 
-            {/* Vue représentant une carte pour chaque deck */}
-
-            <Text style={styles.deckTitle}>{deck.titre_deck}</Text> 
-            {/* Affichage du nom du deck */}
-
-            <Text>{deck.date_fin_deck}</Text> 
-            {/* Affichage de la description du deck */}
-
-            <Text>{deck.nb_cartes}</Text> 
-            {/* Affichage du nombres de cartes du deck */}
-
-             <Text style={styles.deckLikes}>{deck.nb_jaime}❤️</Text> 
-            {/* Affichage du nombres de likes du deck */}
-            <Link style={styles.playButton} href={`/cartes/${deck.id_deck}`}>Jouer</Link>
-
-          </View>
-        ))
-      ) : ( 
-        <Text>Les données ne sont pas disponibles.</Text> 
-        // Message d'erreur alternatif si les données ne sont pas un tableau.
-      )}
-    </ScrollView>
+     <ScrollView contentContainerStyle={styles.deckContainer}>
+          {filteredDecks.length > 0 ? (
+            filteredDecks.map((deck: Deck) => (
+              <View key={deck.id_deck} style={styles.deckCard}> 
+                <Text style={styles.deckTitle}>{deck.titre_deck}</Text> 
+                <Text>{deck.date_fin_deck}</Text> 
+                <Text>{deck.nb_cartes}</Text> 
+                <Text style={styles.deckLikes}>{deck.nb_jaime}❤️</Text> 
+                <Link style={styles.playButton} href={`/cartes/${deck.id_deck}`}>Jouer</Link>
+              </View>
+            ))
+          ) : (
+            <Text>Aucun deck ne correspond à votre recherche.</Text>
+          )}
+        </ScrollView>
       </View>
     </View>
   );
