@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import HomeIcon from './../../assets/img/home.svg';
 
 const HomeButton = () => {
   const router = useRouter();
@@ -11,7 +12,7 @@ const HomeButton = () => {
 
   return (
     <TouchableOpacity style={styles.button} onPress={navigateHome}>
-      <Text style={styles.buttonText}>🏠</Text>
+       <HomeIcon width={20} height={20} stroke="#fff" />
     </TouchableOpacity>
   );
 };
@@ -23,12 +24,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 8,
     alignItems: 'center',
+    justifyContent: 'center',
     elevation: 3,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 
