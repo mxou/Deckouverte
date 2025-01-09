@@ -71,7 +71,6 @@ if (error) {
 
   return (
     <View style={styles.container}>
-      {/* <Image source={logo} style={styles.logo} /> */}
       <Header/>
       <Text style={styles.title}>Choisissez le deck que <Text style={{color: '#D2367A' }}>vous voulez jouer</Text></Text>
        {/* Search Bar */}
@@ -97,7 +96,7 @@ if (error) {
               </View>
             ))
           ) : (
-            <Text>Aucun deck ne correspond à votre recherche.</Text>
+            <Text>Deck(s) indisponible(s)</Text>
           )}
         </ScrollView>
       </View>

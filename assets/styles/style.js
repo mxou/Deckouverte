@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
     backgroundColor: '#FFE5E5',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'start',
     paddingHorizontal: 20,
     paddingVertical: 40,
     position: 'relative', 
