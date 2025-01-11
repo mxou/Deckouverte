@@ -16,6 +16,7 @@ export default function App() {
     titre_deck: string; 
     date_fin_deck: string; 
     nb_cartes: string; 
+    nb_cartes_atm: string; 
     nb_jaime: number;
   }; 
     const [data, setData] = useState<Deck[] | null>(null); 
@@ -90,7 +91,7 @@ if (error) {
               <View key={deck.id_deck} style={styles.deckCard}> 
                 <Text style={styles.deckTitle}>{deck.titre_deck}</Text> 
                 <Text>{deck.date_fin_deck}</Text> 
-                <Text>{deck.nb_cartes}</Text> 
+                <Text>{deck.nb_cartes_atm}</Text> 
                 <Text style={styles.deckLikes}>{deck.nb_jaime}❤️</Text> 
                 <Link style={styles.playButton} href={`/cartes/${deck.id_deck}`}>Jouer</Link>
               </View>
