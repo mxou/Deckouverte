@@ -5,6 +5,9 @@ import Animated, { useSharedValue, withTiming, useAnimatedStyle, withSpring, run
 import { PanGestureHandler, GestureHandlerRootView } from "react-native-gesture-handler";
 import { useGame } from "../context/GameContext";
 
+import BackgroundSVG from "../../assets/img/backgroundCard.svg";
+import LikeButton from "./LikeButton";
+
 type Card = {
   id_carte: number;
   texte_carte: string;
@@ -16,6 +19,7 @@ const { width } = Dimensions.get("window");
 
 interface CardSliderProps {
   cards: Card[];
+  deckId: string;
 }
 
 // Fonction pour générer une couleur aléatoire (surtout pour le bgcolor des cartes)
@@ -23,7 +27,7 @@ const getRandomColor = () => {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 };
 
-export default function CardSlider({ cards }: CardSliderProps) {
+export default function CardSlider({ cards, deckId }: CardSliderProps) {
   const { stats, updateStats, resetStats } = useGame();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isGameWon, setIsGameWon] = useState(false);
@@ -110,11 +114,15 @@ export default function CardSlider({ cards }: CardSliderProps) {
     <GestureHandlerRootView style={styles.mainContainer}>
       <View style={styles.container}>
         {isGameWon ? (
-          <Text style={styles.winText}>🎉 Gagné ! 🎉</Text>
+          <View>
+            <Text style={styles.winText}>🎉 Gagné ! 🎉</Text>
+            <LikeButton deckId={parseInt(deckId)} />
+          </View>
         ) : cards[currentIndex] ? (
           <>
             <PanGestureHandler onGestureEvent={panGesture}>
               <Animated.View style={[styles.card, animatedStyle, opacityStyle, { backgroundColor: bgColor }]}>
+                <BackgroundSVG style={StyleSheet.absoluteFillObject} />
                 <Text style={styles.cardText}>{cards[currentIndex].texte_carte}</Text>
               </Animated.View>
             </PanGestureHandler>
@@ -172,10 +180,10 @@ const styles = StyleSheet.create({
   card: {
     width: width * 0.8,
     height: 300,
-    backgroundColor: "#eb4034",
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
+    overflow: "hidden", // Assurez-vous que le contenu reste dans les limites
     shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
@@ -185,7 +193,8 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 18,
     textAlign: "center",
-    color: "#333",
+    color: "#fff", // Changez selon vos besoins
+    zIndex: 1, // S'assurer que le texte est au-dessus du SVG
   },
   noMoreCards: {
     fontSize: 18,
