@@ -1,25 +1,24 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  
   container: {
     flex: 1,
-    backgroundColor: '#FFE5E5',
-    alignItems: 'center',
-    justifyContent: 'start',
+    backgroundColor: "#FFE5E5",
+    alignItems: "center",
+    justifyContent: "start",
     paddingHorizontal: 20,
     paddingVertical: 40,
-    position: 'relative', 
+    position: "relative",
   },
   title: {
     fontSize: 30,
-    fontWeight: 'bold',
-    color: '#36206D',
+    fontWeight: "bold",
+    color: "#36206D",
     marginBottom: 20,
   },
   searchInput: {
-    width: '100%',
-    backgroundColor: '#fff',
+    width: "100%",
+    backgroundColor: "#fff",
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -27,54 +26,61 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   deckContainer: {
-    width: '100%',
-    flexDirection: 'row',   
-    flexWrap: 'wrap',       
-    justifyContent: 'space-between', 
+    width: "100%",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
   deckCard: {
-    width: '48%',           // 48% pour avoir un espace entre les colonnes
-    backgroundColor: '#fff',
+    width: "48%", // 48% pour avoir un espace entre les colonnes
+    backgroundColor: "#fff",
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,
-    alignItems: 'center',
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+  },
+  deckCardShort: {
+    height: 180, // 80% = 120
+  },
+  deckCardTall: {
+    height: 150, // 100%
   },
   deckTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#4B2E83',
+    fontWeight: "bold",
+    color: "#4B2E83",
     marginBottom: 8,
   },
   deckInfo: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginBottom: 12,
   },
   deckLikes: {
-    position: 'absolute',
+    position: "absolute",
     top: 5,
     left: 5,
   },
   deckButton: {
-    backgroundColor: '#E8407C',
+    backgroundColor: "#E8407C",
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 24,
   },
   deckButtonText: {
     fontSize: 16,
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
   },
   playButton: {
-    backgroundColor: '#D2367A',
+    backgroundColor: "#D2367A",
     padding: 9,
     borderRadius: 8,
-    color: 'white',
+    color: "white",
     fontWeight: 600,
   },
-
 });
 
 export default styles;

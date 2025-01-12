@@ -81,8 +81,8 @@ export default function App() {
       <View style={styles.deckContainer}>
         <ScrollView contentContainerStyle={styles.deckContainer}>
           {filteredDecks.length > 0 ? (
-            filteredDecks.map((deck: Deck) => (
-              <View key={deck.id_deck} style={styles.deckCard}>
+            filteredDecks.map((deck: Deck, index: number) => (
+              <View key={deck.id_deck} style={[styles.deckCard, index % 2 === 0 ? styles.deckCardShort : styles.deckCardTall]}>
                 <Text style={styles.deckTitle}>{deck.titre_deck}</Text>
                 <Text>{deck.date_fin_deck}</Text>
                 <Text>{deck.nb_cartes_atm}</Text>
