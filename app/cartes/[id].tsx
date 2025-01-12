@@ -36,7 +36,7 @@ export default function CartesScreen() {
 
     fetchData(`https://srochedix.alwaysdata.net/ReignApi/api/v1/cartes/deck/${id}`)
       .then((result) => {
-        console.log("Réponse API :", result);
+        // console.log("Réponse API :", result);
         if (result.status === "success" && result.deck && Array.isArray(result.deck.cartes)) {
           setCards(result.deck.cartes);
           setDeckTitle(result.deck.titre_deck || "Deck Inconnu"); //Récupération du titre

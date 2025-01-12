@@ -31,6 +31,7 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
   const { stats, updateStats, resetStats } = useGame();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isGameWon, setIsGameWon] = useState(false);
+  const [isGameFailed, setIsGameFailed] = useState(false);
   const [swipeText, setSwipeText] = useState("");
   const [bgColor, setBgColor] = useState(getRandomColor());
 
@@ -42,19 +43,45 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
     resetStats();
     setCurrentIndex(0);
     setIsGameWon(false);
+    setIsGameFailed(false);
     setSwipeText("");
     setBgColor(getRandomColor());
     opacity.value = withTiming(1, { duration: 700 }); // La carte apparait en 700ms
   }, [cards]);
 
   const handleSwipeComplete = (direction: "left" | "right") => {
+    let populationChange = 0;
+    let financesChange = 0;
+
     if (direction === "left") {
       const { population, finances } = cards[currentIndex].valeurs_choix1;
-      updateStats(population, finances);
+      populationChange = population;
+      financesChange = finances;
     } else if (direction === "right") {
       const { population, finances } = cards[currentIndex].valeurs_choix2;
-      updateStats(population, finances);
+      populationChange = population;
+      financesChange = finances;
     }
+
+    // Calculer les nouvelles stats localement
+    const newPopulation = Math.max(0, stats.population + populationChange);
+    const newFinances = Math.max(0, stats.finances + financesChange);
+
+    // Mettre à jour les stats dans le contexte global
+    updateStats(populationChange, financesChange);
+
+    // Log des nouvelles valeurs
+    console.warn("Nouvelles stats : Population =", newPopulation, ", Finances =", newFinances);
+
+    // Vérifier les conditions de défaite
+    if (newPopulation <= 0 || newFinances <= 0 || newPopulation >= 100 || newFinances >= 100) {
+      setIsGameFailed(true);
+    }
+
+    // // Ajout d'un log après mise à jour
+    // setTimeout(() => {
+    //   console.warn("Stats actuelles : Population =", stats.population, ", Finances =", stats.finances);
+    // }, 0);
 
     setSwipeText("");
     setCurrentIndex((prevIndex) => {
@@ -117,6 +144,10 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
           <View>
             <Text style={styles.winText}>🎉 Gagné ! 🎉</Text>
             <LikeButton deckId={parseInt(deckId)} />
+          </View>
+        ) : isGameFailed ? (
+          <View>
+            <Text style={styles.loseText}>💔 Perdu ! 💔</Text>
           </View>
         ) : cards[currentIndex] ? (
           <>
@@ -202,10 +233,16 @@ const styles = StyleSheet.create({
     color: "#999",
   },
   winText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#4CAF50",
+    fontSize: 50,
+    fontWeight: 700,
     textAlign: "center",
+    color: "#36206D",
+  },
+  loseText: {
+    fontSize: 50,
+    fontWeight: 700,
+    textAlign: "center",
+    color: "red",
   },
   swipeTextContainer: {
     position: "absolute",
