@@ -10,6 +10,7 @@ import styles from "./../../assets/styles/carte_style.js";
 import HomeButton from "../../src/components/HomeButton";
 import ErrorDisplay from "../../src/components/ErrorDisplay";
 import LoadingDisplay from "../../src/components/LoadingDisplay";
+import ClearAsyncStorage from "../../src/components/ClearAsyncStorage";
 
 type Card = {
   id_carte: number;
@@ -55,7 +56,8 @@ export default function CartesScreen() {
     <View style={styles.container}>
       <Header />
       <Text style={styles.title}>{deckTitle}</Text>
-      {cards.length > 0 ? <CardSlider cards={cards} /> : <Text style={styles.noCardsText}>Aucune carte disponible pour ce deck.</Text>}
+      <ClearAsyncStorage />
+      {cards.length > 0 ? <CardSlider cards={cards} deckId={id as string} /> : <Text style={styles.noCardsText}>Aucune carte disponible pour ce deck.</Text>}
     </View>
   );
 }
