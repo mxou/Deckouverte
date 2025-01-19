@@ -25,6 +25,13 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   // État pour la recherche
 
+  const formatDate = (dateString: string | null | undefined): string => {
+    if (!dateString) return ""; // Si la date est vide ou invalide
+
+    const [year, month, day] = dateString.split(" ")[0].split("-"); // Extraire année, mois et jour
+    return `${day}/${month}/${year}`; // Retourner le format ddmmyyyy
+  };
+
   useEffect(() => {
     fetchData("https://srochedix.alwaysdata.net/ReignApi/api/v1/decks")
       .then((result) => {
@@ -82,11 +89,29 @@ export default function App() {
         <ScrollView contentContainerStyle={styles.deckContainer}>
           {filteredDecks.length > 0 ? (
             filteredDecks.map((deck: Deck, index: number) => (
-              <View key={deck.id_deck} style={[styles.deckCard, index % 3 === 0 ? styles.deckCardShort : styles.deckCardTall]}>
-                <Text style={styles.deckTitle}>{deck.titre_deck}</Text>
-                <Text>{deck.date_fin_deck}</Text>
-                <Text>{deck.nb_cartes_atm}</Text>
-                <Text style={styles.deckLikes}>{deck.nb_jaime}❤️</Text>
+              <View key={deck.id_deck} style={styles.deckCard}>
+                <Text style={styles.deckTitle} ellipsizeMode="tail" numberOfLines={1}>
+                  {deck.titre_deck}
+                </Text>
+                {/* Cartes empilées */}
+                <View style={styles.cardStack}>
+                  {/* Carte arrière gauche */}
+                  <View style={[styles.stackedCard, styles.stackedCardBack, styles.stackedCardLeft]} />
+                  {/* Carte arrière droite */}
+                  <View style={[styles.stackedCard, styles.stackedCardBack, styles.stackedCardRight]} />
+                  {/* Carte principale */}
+                  <View style={[styles.stackedCard, styles.stackedCardFront]}>
+                    <Text style={styles.deckCartesAtm}>{deck.nb_cartes_atm}</Text>
+                    <Text style={[styles.deckCartesAtm, { fontSize: 14 }]}>cartes</Text>
+                  </View>
+                </View>
+
+                <Text style={styles.deckDateFin}>{formatDate(deck.date_fin_deck)}</Text>
+
+                <View style={styles.deckLikes}>
+                  <Text>{deck.nb_jaime}❤️</Text>
+                </View>
+
                 <Link style={styles.playButton} href={`/cartes/${deck.id_deck}`}>
                   Jouer
                 </Link>

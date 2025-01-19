@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     fontSize: 16,
     marginBottom: 20,
+    elevation: 8,
   },
   deckContainer: {
     width: "100%",
@@ -35,22 +36,74 @@ const styles = StyleSheet.create({
     width: "48%", // 48% pour avoir un espace entre les colonnes
     backgroundColor: "#fff",
     borderRadius: 8,
-    padding: 16,
+    padding: 12,
     marginBottom: 16,
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
+    position: "relative",
+    elevation: 3,
   },
-  deckCardShort: {
-    height: 180, // 80% = 120
+  cardStack: {
+    width: "40%",
+    aspectRatio: 0.8,
+    position: "relative",
+    marginVertical: 12,
   },
-  deckCardTall: {
-    height: 150, // 100%
+  stackedCard: {
+    width: "90%",
+    height: "90%",
+    borderWidth: 2,
+    borderColor: "#D2367A",
+    borderRadius: 8,
+    backgroundColor: "#fff",
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
   },
+  stackedCardBack: {
+    backgroundColor: "#fff",
+    elevation: 1,
+  },
+  stackedCardLeft: {
+    transform: [{ rotate: "-8deg" }],
+    left: -2,
+  },
+  stackedCardRight: {
+    transform: [{ rotate: "8deg" }],
+    right: -2,
+  },
+  stackedCardFront: {
+    elevation: 2,
+  },
+
   deckTitle: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#4B2E83",
+    fontWeight: 800,
+    color: "#D2367A",
+    marginBottom: 8,
+    marginTop: 8,
+    width: "100%",
+    textAlign: "center",
+  },
+  deckCartesAtmContainer: {
+    borderWidth: 2,
+    borderRadius: 5,
+    borderColor: "#D2367A",
+    padding: 1,
+    paddingTop: 8,
+    paddingBottom: 8,
+    marginBottom: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "40%",
+  },
+  deckCartesAtm: {
+    color: "#36206D",
+    fontSize: 18,
+    fontWeight: 700,
+  },
+  deckDateFin: {
     marginBottom: 8,
   },
   deckInfo: {
@@ -75,11 +128,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   playButton: {
+    textAlign: "center",
     backgroundColor: "#D2367A",
-    padding: 9,
+    padding: 6,
     borderRadius: 8,
     color: "white",
     fontWeight: 600,
+    width: "90%",
   },
 });
 
