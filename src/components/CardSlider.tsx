@@ -7,6 +7,7 @@ import { useGame } from "../context/GameContext";
 
 import BackgroundSVG from "../../assets/img/backgroundCard.svg";
 import LikeButton from "./LikeButton";
+import HomeButton from "./HomeButton";
 
 type Card = {
   id_carte: number;
@@ -141,13 +142,33 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
     <GestureHandlerRootView style={styles.mainContainer}>
       <View style={styles.container}>
         {isGameWon ? (
-          <View>
+          <View style={styles.winContainer}>
             <Text style={styles.winText}>🎉 Gagné ! 🎉</Text>
+            <Text style={styles.winVosStats}>Vos statistiques</Text>
+            <View style={styles.winStatsContainer}>
+              <Text style={styles.winStats}>👫 ​Population</Text>
+              <Text style={[styles.winStats, { color: "#D2367A", fontWeight: "900" }]}>{stats.population}</Text>
+            </View>
+            <View style={styles.winStatsContainer}>
+              <Text style={styles.winStats}>💸​ Finances</Text>
+              <Text style={[styles.winStats, { color: "#D2367A", fontWeight: "900" }]}>{stats.finances}</Text>
+            </View>
+            <HomeButton />
             <LikeButton deckId={parseInt(deckId)} />
           </View>
         ) : isGameFailed ? (
-          <View>
-            <Text style={styles.loseText}>💔 Perdu ! 💔</Text>
+          <View style={styles.loseContainer}>
+            <Text style={styles.loseText}>🎉 Gagné ! 🎉</Text>
+            <Text style={styles.loseVosStats}>Vos statistiques</Text>
+            <View style={styles.loseStatsContainer}>
+              <Text style={styles.loseStats}>👫 ​Population</Text>
+              <Text style={[styles.loseStats, { color: "#D2367A", fontWeight: "900" }]}>{stats.population}</Text>
+            </View>
+            <View style={styles.loseStatsContainer}>
+              <Text style={styles.loseStats}>💸​ Finances</Text>
+              <Text style={[styles.loseStats, { color: "#D2367A", fontWeight: "900" }]}>{stats.finances}</Text>
+            </View>
+            <HomeButton />
           </View>
         ) : cards[currentIndex] ? (
           <>
@@ -232,18 +253,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#999",
   },
-  winText: {
-    fontSize: 50,
-    fontWeight: 700,
-    textAlign: "center",
-    color: "#36206D",
-  },
-  loseText: {
-    fontSize: 50,
-    fontWeight: 700,
-    textAlign: "center",
-    color: "red",
-  },
   swipeTextContainer: {
     position: "absolute",
     top: "50%",
@@ -258,5 +267,63 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  winContainer: {
+    alignItems: "center",
+  },
+  winText: {
+    fontSize: 50,
+    fontWeight: 700,
+    textAlign: "center",
+    color: "#36206D",
+  },
+  winVosStats: {
+    fontSize: 24,
+    fontWeight: 700,
+    textAlign: "center",
+    color: "#36206D",
+  },
+  winStatsContainer: {
+    backgroundColor: "#FFC7C7",
+    padding: 3,
+    margin: 5,
+    borderRadius: 5,
+    width: 250,
+    justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  winStats: {
+    fontSize: 20,
+    fontWeight: 700,
+    color: "#36206D",
+  },
+  loseContainer: {
+    alignItems: "center",
+  },
+  loseText: {
+    fontSize: 50,
+    fontWeight: 700,
+    textAlign: "center",
+    color: "red",
+  },
+  loseVosStats: {
+    fontSize: 24,
+    fontWeight: 700,
+    textAlign: "center",
+    color: "#36206D",
+  },
+  loseStatsContainer: {
+    backgroundColor: "#FFC7C7",
+    padding: 3,
+    margin: 5,
+    borderRadius: 5,
+    width: 250,
+    justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  loseStats: {
+    fontSize: 20,
+    fontWeight: 700,
+    color: "#36206D",
   },
 });
