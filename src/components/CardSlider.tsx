@@ -51,6 +51,32 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
   }, [cards]);
 
   const handleSwipeComplete = (direction: "left" | "right") => {
+    // Définir la direction de sortie
+    const finalX = direction === "left" ? -width : width;
+
+    // D'abord, mettre à jour l'index de la carte (avant l'animation)
+    setCurrentIndex((prevIndex) => {
+      const nextIndex = prevIndex + 1;
+      if (nextIndex >= cards.length) {
+        setIsGameWon(true);
+        return prevIndex; // Pas d'index suivant si c'est la dernière carte
+      }
+
+      setBgColor(getRandomColor()); // Mettre à jour la couleur
+      return nextIndex; // Retourner l'index de la carte suivante
+    });
+
+    // Animation pour faire glisser la carte hors de l'écran
+    translateX.value = withTiming(finalX, { duration: 300 }, () => {
+      // Une fois l'animation terminée, réinitialiser les valeurs de position et opacité
+      translateX.value = 0; // Réinitialiser la position X
+      opacity.value = 0; // Réinitialiser l'opacité à 0 pour la prochaine carte
+
+      // Réanimer l'opacité pour la carte suivante
+      opacity.value = withTiming(1, { duration: 700 });
+    });
+
+    // Mettre à jour les stats et conditions après le swipe
     let populationChange = 0;
     let financesChange = 0;
 
@@ -64,43 +90,16 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
       financesChange = finances;
     }
 
-    // Calculer les nouvelles stats localement
     const newPopulation = Math.max(0, stats.population + populationChange);
     const newFinances = Math.max(0, stats.finances + financesChange);
-
-    // Mettre à jour les stats dans le contexte global
     updateStats(populationChange, financesChange);
 
-    // Log des nouvelles valeurs
-    console.warn("Nouvelles stats : Population =", newPopulation, ", Finances =", newFinances);
-
-    // Vérifier les conditions de défaite
     if (newPopulation <= 0 || newFinances <= 0 || newPopulation >= 100 || newFinances >= 100) {
       setIsGameFailed(true);
     }
 
-    // // Ajout d'un log après mise à jour
-    // setTimeout(() => {
-    //   console.warn("Stats actuelles : Population =", stats.population, ", Finances =", stats.finances);
-    // }, 0);
-
-    setSwipeText("");
-    setCurrentIndex((prevIndex) => {
-      const nextIndex = prevIndex + 1;
-      if (nextIndex >= cards.length) {
-        setIsGameWon(true);
-        return prevIndex;
-      }
-      setBgColor(getRandomColor()); // Change la couleur pour la prochaine carte
-
-      // Réinitialise et anime l'opacité
-      opacity.value = 0;
-      opacity.value = withTiming(1, { duration: 700 }); // Durée de 700ms
-
-      return nextIndex;
-    });
-
-    translateX.value = 0;
+    // Réinitialiser le texte de swipe
+    runOnJS(setSwipeText)("");
   };
 
   const panGesture = useAnimatedGestureHandler({
