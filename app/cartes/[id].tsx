@@ -56,7 +56,7 @@ export default function CartesScreen() {
     <View style={styles.container}>
       <Header />
       <Text style={styles.title}>{deckTitle}</Text>
-      <ClearAsyncStorage />
+      {/* <ClearAsyncStorage /> */}
       {cards.length > 0 ? <CardSlider cards={cards} deckId={id as string} /> : <Text style={styles.noCardsText}>Aucune carte disponible pour ce deck.</Text>}
     </View>
   );
