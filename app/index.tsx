@@ -86,40 +86,39 @@ export default function App() {
       />
 
       <View style={styles.deckContainer}>
-        <ScrollView contentContainerStyle={styles.deckContainer}>
-          {filteredDecks.length > 0 ? (
-            filteredDecks.map((deck: Deck, index: number) => (
-              <View key={deck.id_deck} style={styles.deckCard}>
-                <Text style={styles.deckTitle} ellipsizeMode="tail" numberOfLines={1}>
-                  {deck.titre_deck}
-                </Text>
-                {/* Cartes empilées */}
-                <View style={styles.cardStack}>
-                  {/* Carte arrière gauche */}
-                  <View style={[styles.stackedCard, styles.stackedCardBack, styles.stackedCardLeft]} />
-                  {/* Carte arrière droite */}
-                  <View style={[styles.stackedCard, styles.stackedCardBack, styles.stackedCardRight]} />
-                  {/* Carte principale */}
-                  <View style={[styles.stackedCard, styles.stackedCardFront]}>
-                    <Text style={styles.deckCartesAtm}>{deck.nb_cartes_atm}</Text>
-                    <Text style={[styles.deckCartesAtm, { fontSize: 14 }]}>cartes</Text>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent} // Nouveau style pour ScrollView
+          keyboardShouldPersistTaps="handled" // Permet la saisie tout en scrollant
+        >
+          <View style={styles.deckContainer}>
+            {filteredDecks.length > 0 ? (
+              filteredDecks.map((deck: Deck) => (
+                <View key={deck.id_deck} style={styles.deckCard}>
+                  <Text style={styles.deckTitle} ellipsizeMode="tail" numberOfLines={1}>
+                    {deck.titre_deck}
+                  </Text>
+                  {/* Cartes empilées */}
+                  <View style={styles.cardStack}>
+                    <View style={[styles.stackedCard, styles.stackedCardBack, styles.stackedCardLeft]} />
+                    <View style={[styles.stackedCard, styles.stackedCardBack, styles.stackedCardRight]} />
+                    <View style={[styles.stackedCard, styles.stackedCardFront]}>
+                      <Text style={styles.deckCartesAtm}>{deck.nb_cartes_atm}</Text>
+                      <Text style={[styles.deckCartesAtm, { fontSize: 14 }]}>cartes</Text>
+                    </View>
                   </View>
+                  <Text style={styles.deckDateFin}>{formatDate(deck.date_fin_deck)}</Text>
+                  <View style={styles.deckLikes}>
+                    <Text>{deck.nb_jaime}❤️</Text>
+                  </View>
+                  <Link style={styles.playButton} href={`/cartes/${deck.id_deck}`}>
+                    Jouer
+                  </Link>
                 </View>
-
-                <Text style={styles.deckDateFin}>{formatDate(deck.date_fin_deck)}</Text>
-
-                <View style={styles.deckLikes}>
-                  <Text>{deck.nb_jaime}❤️</Text>
-                </View>
-
-                <Link style={styles.playButton} href={`/cartes/${deck.id_deck}`}>
-                  Jouer
-                </Link>
-              </View>
-            ))
-          ) : (
-            <Text>Deck(s) indisponible(s)</Text>
-          )}
+              ))
+            ) : (
+              <Text>Deck(s) indisponible(s)</Text>
+            )}
+          </View>
         </ScrollView>
       </View>
     </View>

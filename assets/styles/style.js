@@ -26,11 +26,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     elevation: 8,
   },
+  scrollContent: {
+    paddingBottom: 20, // Ajoute un espace à la fin pour éviter que le contenu soit coupé
+  },
   deckContainer: {
     width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+    alignItems: "flex-start", // Permet de bien aligner les cartes
+    flex: 1,
   },
   deckCard: {
     width: "48%", // 48% pour avoir un espace entre les colonnes
@@ -80,7 +85,8 @@ const styles = StyleSheet.create({
   deckTitle: {
     fontSize: 18,
     fontWeight: 800,
-    color: "#D2367A",
+    // color: "#D2367A",
+    color: "#36206D",
     marginBottom: 8,
     marginTop: 8,
     width: "100%",

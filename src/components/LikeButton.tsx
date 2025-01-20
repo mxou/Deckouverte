@@ -59,7 +59,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ deckId }) => {
 
   return (
     <View style={styles.container}>
-      {canLike ? <Button title="Like this Deck" onPress={handleLikeDeck} /> : <Text style={styles.likedText}>Vous avez déjà liké ce deck.</Text>}
+      {canLike ? <Button title="Mettre un like" onPress={handleLikeDeck} /> : <Text style={styles.likedText}>Vous avez déjà liké ce deck.</Text>}
     </View>
   );
 };
