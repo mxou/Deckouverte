@@ -51,32 +51,9 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
   }, [cards]);
 
   const handleSwipeComplete = (direction: "left" | "right") => {
-    // Définir la direction de sortie
     const finalX = direction === "left" ? -width : width;
 
-    // D'abord, mettre à jour l'index de la carte (avant l'animation)
-    setCurrentIndex((prevIndex) => {
-      const nextIndex = prevIndex + 1;
-      if (nextIndex >= cards.length) {
-        setIsGameWon(true);
-        return prevIndex; // Pas d'index suivant si c'est la dernière carte
-      }
-
-      setBgColor(getRandomColor()); // Mettre à jour la couleur
-      return nextIndex; // Retourner l'index de la carte suivante
-    });
-
-    // Animation pour faire glisser la carte hors de l'écran
-    translateX.value = withTiming(finalX, { duration: 300 }, () => {
-      // Une fois l'animation terminée, réinitialiser les valeurs de position et opacité
-      translateX.value = 0; // Réinitialiser la position X
-      opacity.value = 0; // Réinitialiser l'opacité à 0 pour la prochaine carte
-
-      // Réanimer l'opacité pour la carte suivante
-      opacity.value = withTiming(1, { duration: 700 });
-    });
-
-    // Mettre à jour les stats et conditions après le swipe
+    // Déterminer les changements de stats
     let populationChange = 0;
     let financesChange = 0;
 
@@ -84,7 +61,7 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
       const { population, finances } = cards[currentIndex].valeurs_choix1;
       populationChange = population;
       financesChange = finances;
-    } else if (direction === "right") {
+    } else {
       const { population, finances } = cards[currentIndex].valeurs_choix2;
       populationChange = population;
       financesChange = finances;
@@ -92,13 +69,36 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
 
     const newPopulation = Math.max(0, stats.population + populationChange);
     const newFinances = Math.max(0, stats.finances + financesChange);
+
+    // Mettre à jour les stats globales
     updateStats(populationChange, financesChange);
 
+    // Vérifier si la partie est perdue
     if (newPopulation <= 0 || newFinances <= 0 || newPopulation >= 100 || newFinances >= 100) {
       setIsGameFailed(true);
+      return; // Stop ici, inutile de mettre à jour l'index des cartes
     }
 
-    // Réinitialiser le texte de swipe
+    // Passer à la carte suivante
+    setCurrentIndex((prevIndex) => {
+      const nextIndex = prevIndex + 1;
+
+      if (nextIndex >= cards.length) {
+        setIsGameWon(true);
+        return prevIndex; // Stop si c'est la dernière carte
+      }
+
+      setBgColor(getRandomColor()); // Changer la couleur de fond
+      return nextIndex;
+    });
+
+    // Animation de sortie de la carte
+    translateX.value = withTiming(finalX, { duration: 300 }, () => {
+      translateX.value = 0;
+      opacity.value = 0;
+      opacity.value = withTiming(1, { duration: 700 });
+    });
+
     runOnJS(setSwipeText)("");
   };
 
