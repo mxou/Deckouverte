@@ -157,7 +157,7 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
           </View>
         ) : isGameFailed ? (
           <View style={styles.loseContainer}>
-            <Text style={styles.loseText}>🎉 Gagné ! 🎉</Text>
+            <Text style={styles.loseText}>💀 Perdu 💀</Text>
             <Text style={styles.loseVosStats}>Vos statistiques</Text>
             <View style={styles.loseStatsContainer}>
               <Text style={styles.loseStats}>👫 ​Population</Text>
