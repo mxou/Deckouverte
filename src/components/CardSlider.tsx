@@ -66,6 +66,7 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
   // Réinitialiser les stats au début de la game
   useEffect(() => {
     resetStats();
+    playStartSound();
     setCurrentIndex(0);
     setIsGameWon(false);
     setIsGameFailed(false);
@@ -74,13 +75,15 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
     opacity.value = withTiming(1, { duration: 700 }); // La carte apparait en 700ms
   }, [cards]);
 
-  const playSound = async () => {
-    const { sound } = await Audio.Sound.createAsync(
-      require("./../../assets/audio/swipeSound.mp3") // Assure-toi d'avoir le fichier
-    );
-    setSound(sound);
+  const playSound = async (soundFile: any) => {
+    const { sound } = await Audio.Sound.createAsync(soundFile);
     await sound.playAsync();
   };
+
+  const playSwipeSound = () => playSound(require("./../../assets/audio/swipeSound.mp3"));
+  const playWinSound = () => playSound(require("./../../assets/audio/winBanjoSound.mp3"));
+  const playLoseSound = () => playSound(require("./../../assets/audio/loseSound.mp3"));
+  const playStartSound = () => playSound(require("./../../assets/audio/startSound.mp3"));
 
   const handleSwipeComplete = (direction: "left" | "right") => {
     const finalX = direction === "left" ? -width : width;
@@ -93,12 +96,12 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
       const { population, finances } = cards[currentIndex].valeurs_choix1;
       populationChange = population;
       financesChange = finances;
-      playSound();
+      playSwipeSound();
     } else {
       const { population, finances } = cards[currentIndex].valeurs_choix2;
       populationChange = population;
       financesChange = finances;
-      playSound();
+      playSwipeSound();
     }
 
     const newPopulation = Math.max(0, stats.population + populationChange);
@@ -140,18 +143,22 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
     if (newPopulation <= 0) {
       setGameOverMessage("Votre population semble avoir été kidnappée...");
       setIsGameFailed(true);
+      playLoseSound();
       return;
     } else if (newFinances <= 0) {
       setGameOverMessage("Alala... la crise des subprimes...");
       setIsGameFailed(true);
+      playLoseSound();
       return;
     } else if (newPopulation >= 100) {
       setGameOverMessage("Votre population a explosé... Genre vraiment");
       setIsGameFailed(true);
+      playLoseSound();
       return;
     } else if (newFinances >= 100) {
       setGameOverMessage("Un avare est un imbécile qui se laisse mourir de faim pour garder de quoi vivre");
       setIsGameFailed(true);
+      playLoseSound();
       return;
     }
 
@@ -161,6 +168,7 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
 
       if (nextIndex >= cards.length) {
         setIsGameWon(true);
+        playWinSound();
         return prevIndex; // Stop si c'est la dernière carte
       }
 

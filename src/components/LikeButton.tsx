@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Audio } from "expo-av";
 import { View, Text, Button, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import LikeIcon from "./../../assets/img/like_icon.svg";
+
 interface LikeButtonProps {
   deckId: number; // Assurez-vous que le type est cohérent
 }
@@ -34,17 +37,25 @@ const LikeButton: React.FC<LikeButtonProps> = ({ deckId }) => {
     }
   };
 
+  const playSound = async (soundFile: any) => {
+    const { sound } = await Audio.Sound.createAsync(soundFile);
+    await sound.playAsync();
+  };
+
+  const playYaySound = () => playSound(require("./../../assets/audio/winYaySound.mp3"));
+
   const handleLikeDeck = async () => {
     try {
       const likedDecks = JSON.parse((await AsyncStorage.getItem("likedDecks")) || "[]");
 
       if (!likedDecks.includes(deckId)) {
+        playYaySound();
         likedDecks.push(deckId);
         await AsyncStorage.setItem("likedDecks", JSON.stringify(likedDecks));
 
         await likeDeckApi();
 
-        alert("Merci d'avoir liké ce deck");
+        alert("Merci d'avoir liké ce deck !");
         console.log("Deck liké : ", deckId);
         setCanLike(false);
       }

@@ -33,7 +33,8 @@ export default function App() {
   };
 
   useEffect(() => {
-    fetchData("https://srochedix.alwaysdata.net/ReignApi/api/v1/decks")
+    // fetchData("https://srochedix.alwaysdata.net/ReignApi/api/v1/decks")
+    fetchData("https://srochedix.alwaysdata.net/ReignApi/api/v1/decksnew")
       .then((result) => {
         console.log("API Response:", result);
         if (result.status === "success" && Array.isArray(result.decks)) {
