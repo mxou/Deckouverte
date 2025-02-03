@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Dimensions } from "react-native";
 import "react-native-reanimated";
 import Animated, { useSharedValue, withTiming, useAnimatedStyle, withSpring, runOnJS, useAnimatedGestureHandler } from "react-native-reanimated";
 import { PanGestureHandler, GestureHandlerRootView } from "react-native-gesture-handler";
+import { Audio } from "expo-av";
 import { useGame } from "../context/GameContext";
 
 import BackgroundSVG from "../../assets/img/backgroundCard.svg";
@@ -24,8 +25,23 @@ interface CardSliderProps {
 }
 
 // Fonction pour générer une couleur aléatoire (surtout pour le bgcolor des cartes)
-const getRandomColor = () => {
-  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+const getRandomColor = (): string => {
+  const baseColors: string[] = ["#D2367A", "#693ED3", "#36206D"];
+  const baseColor: string = baseColors[Math.floor(Math.random() * baseColors.length)]; // Choisir une couleur de base
+
+  const mixWithBlack = (hex: string, factor: number = 0.4): string => {
+    let r: number = parseInt(hex.substring(1, 3), 16);
+    let g: number = parseInt(hex.substring(3, 5), 16);
+    let b: number = parseInt(hex.substring(5, 7), 16);
+
+    r = Math.round(r * (1 - factor));
+    g = Math.round(g * (1 - factor));
+    b = Math.round(b * (1 - factor));
+
+    return `rgb(${r}, ${g}, ${b})`;
+  };
+
+  return mixWithBlack(baseColor);
 };
 
 export default function CardSlider({ cards, deckId }: CardSliderProps) {
@@ -35,6 +51,9 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
   const [isGameFailed, setIsGameFailed] = useState(false);
   const [swipeText, setSwipeText] = useState("");
   const [bgColor, setBgColor] = useState(getRandomColor());
+  const [gameOverMessage, setGameOverMessage] = useState("");
+  const [swipePosition, setSwipePosition] = useState<"left" | "right" | "">("");
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
 
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(0); // Variable animée pour l'opacité
@@ -50,6 +69,14 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
     opacity.value = withTiming(1, { duration: 700 }); // La carte apparait en 700ms
   }, [cards]);
 
+  const playSound = async () => {
+    const { sound } = await Audio.Sound.createAsync(
+      require("./../../assets/audio/swipeSound.mp3") // Assure-toi d'avoir le fichier
+    );
+    setSound(sound);
+    await sound.playAsync();
+  };
+
   const handleSwipeComplete = (direction: "left" | "right") => {
     const finalX = direction === "left" ? -width : width;
 
@@ -61,10 +88,12 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
       const { population, finances } = cards[currentIndex].valeurs_choix1;
       populationChange = population;
       financesChange = finances;
+      playSound();
     } else {
       const { population, finances } = cards[currentIndex].valeurs_choix2;
       populationChange = population;
       financesChange = finances;
+      playSound();
     }
 
     const newPopulation = Math.max(0, stats.population + populationChange);
@@ -74,9 +103,27 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
     updateStats(populationChange, financesChange);
 
     // Vérifier si la partie est perdue
-    if (newPopulation <= 0 || newFinances <= 0 || newPopulation >= 100 || newFinances >= 100) {
+    // if (newPopulation <= 0 || newFinances <= 0 || newPopulation >= 100 || newFinances >= 100) {
+    //   setIsGameFailed(true);
+    //   return; // Stop ici, inutile de mettre à jour l'index des cartes
+    // }
+
+    if (newPopulation <= 0) {
+      setGameOverMessage("Votre population semble avoir été kidnappée...");
       setIsGameFailed(true);
-      return; // Stop ici, inutile de mettre à jour l'index des cartes
+      return;
+    } else if (newFinances <= 0) {
+      setGameOverMessage("Alala... la crise des subprimes...");
+      setIsGameFailed(true);
+      return;
+    } else if (newPopulation >= 100) {
+      setGameOverMessage("Votre population a explosé... Genre vraiment");
+      setIsGameFailed(true);
+      return;
+    } else if (newFinances >= 100) {
+      setGameOverMessage("Un avare est un imbécile qui se laisse mourir de faim pour garder de quoi vivre");
+      setIsGameFailed(true);
+      return;
     }
 
     // Passer à la carte suivante
@@ -105,14 +152,20 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
   const panGesture = useAnimatedGestureHandler({
     onActive: (event) => {
       translateX.value = event.translationX;
-      runOnJS(setSwipeText)(
-        event.translationX > 40
-          ? cards[currentIndex]?.valeurs_choix2?.texte || ""
-          : event.translationX < -40
-          ? cards[currentIndex]?.valeurs_choix1?.texte || ""
-          : ""
-      );
+
+      // Détecter la direction du swipe et placer le container
+      if (event.translationX > 40) {
+        runOnJS(setSwipeText)(cards[currentIndex]?.valeurs_choix2?.texte || "");
+        runOnJS(setSwipePosition)("right");
+      } else if (event.translationX < -40) {
+        runOnJS(setSwipeText)(cards[currentIndex]?.valeurs_choix1?.texte || "");
+        runOnJS(setSwipePosition)("left");
+      } else {
+        runOnJS(setSwipeText)("");
+        runOnJS(setSwipePosition)("");
+      }
     },
+
     onEnd: (event) => {
       if (event.translationX < -100) {
         runOnJS(handleSwipeComplete)("left");
@@ -158,6 +211,7 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
         ) : isGameFailed ? (
           <View style={styles.loseContainer}>
             <Text style={styles.loseText}>💀 Perdu 💀</Text>
+            <Text style={styles.loseMessage}>{gameOverMessage}</Text>
             <Text style={styles.loseVosStats}>Vos statistiques</Text>
             <View style={styles.loseStatsContainer}>
               <Text style={styles.loseStats}>👫 ​Population</Text>
@@ -171,18 +225,26 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
           </View>
         ) : cards[currentIndex] ? (
           <>
-            <PanGestureHandler onGestureEvent={panGesture}>
-              <Animated.View style={[styles.card, animatedStyle, opacityStyle, { backgroundColor: bgColor }]}>
-                <BackgroundSVG style={StyleSheet.absoluteFillObject} />
-                <Text style={styles.cardText}>{cards[currentIndex].texte_carte}</Text>
-              </Animated.View>
-            </PanGestureHandler>
+            <View style={styles.fullScreenContainer}>
+              {swipeText !== "" && (
+                <View
+                  style={[
+                    styles.swipeTextContainer,
+                    { backgroundColor: bgColor },
+                    swipePosition === "left" ? styles.swipeContainerLeft : styles.swipeContainerRight,
+                  ]}
+                >
+                  <Text style={styles.swipeText}>{swipeText}</Text>
+                </View>
+              )}
 
-            {swipeText !== "" && (
-              <View style={styles.swipeTextContainer}>
-                <Text style={styles.swipeText}>{swipeText}</Text>
-              </View>
-            )}
+              <PanGestureHandler onGestureEvent={panGesture}>
+                <Animated.View style={[styles.card, animatedStyle, opacityStyle, { backgroundColor: bgColor }]}>
+                  <BackgroundSVG style={StyleSheet.absoluteFillObject} />
+                  <Text style={styles.cardText}>{cards[currentIndex].texte_carte}</Text>
+                </Animated.View>
+              </PanGestureHandler>
+            </View>
           </>
         ) : (
           <Text style={styles.noMoreCards}>Plus de cartes disponibles</Text>
@@ -252,20 +314,36 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#999",
   },
+  fullScreenContainer: {
+    position: "absolute",
+    width: "100%", // Prend toute la largeur de l'écran
+    height: "100%", // Prend toute la hauteur de l'écran
+    justifyContent: "center",
+    alignItems: "center",
+  },
   swipeTextContainer: {
     position: "absolute",
-    top: "50%",
-    alignSelf: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    top: "90%",
+    transform: [{ translateY: -20 }], // Centre verticalement sans flex
+    // backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: "#D2367A",
     paddingVertical: 8,
     paddingHorizontal: 12,
-    borderRadius: 8,
+    // borderRadius: 8,
+    maxWidth: "70%",
   },
   swipeText: {
     fontSize: 16,
     color: "#fff",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  swipeContainerLeft: {
+    left: -21, // Bien collé au bord gauche
+  },
+
+  swipeContainerRight: {
+    right: -21, // Bien collé au bord droit
   },
   winContainer: {
     alignItems: "center",
@@ -304,6 +382,13 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     textAlign: "center",
     color: "red",
+  },
+  loseMessage: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#D2367A",
+    textAlign: "center",
+    marginVertical: 10,
   },
   loseVosStats: {
     fontSize: 24,
