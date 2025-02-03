@@ -54,6 +54,11 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
   const [gameOverMessage, setGameOverMessage] = useState("");
   const [swipePosition, setSwipePosition] = useState<"left" | "right" | "">("");
   const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [previousPopulation, setPreviousPopulation] = useState(stats.population);
+  const [previousFinances, setPreviousFinances] = useState(stats.finances);
+
+  const [populationColor, setPopulationColor] = useState("#444");
+  const [financesColor, setFinancesColor] = useState("#444");
 
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(0); // Variable animée pour l'opacité
@@ -107,6 +112,30 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
     //   setIsGameFailed(true);
     //   return; // Stop ici, inutile de mettre à jour l'index des cartes
     // }
+
+    // Vérifier si la population a augmenté ou diminué
+    if (newPopulation > previousPopulation) {
+      setPopulationColor("green");
+    } else if (newPopulation < previousPopulation) {
+      setPopulationColor("red");
+    }
+
+    // Vérifier si les finances ont augmenté ou diminué
+    if (newFinances > previousFinances) {
+      setFinancesColor("green");
+    } else if (newFinances < previousFinances) {
+      setFinancesColor("red");
+    }
+
+    // Après 0.2s, revenir à la couleur par défaut
+    setTimeout(() => {
+      setPopulationColor("#444");
+      setFinancesColor("#444");
+    }, 800);
+
+    // Mettre à jour les anciennes valeurs
+    setPreviousPopulation(newPopulation);
+    setPreviousFinances(newFinances);
 
     if (newPopulation <= 0) {
       setGameOverMessage("Votre population semble avoir été kidnappée...");
@@ -252,8 +281,8 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
       </View>
 
       <View style={styles.statsContainer}>
-        <Text style={styles.statsText}>👫​ Population: {stats.population}</Text>
-        <Text style={styles.statsText}>💸​ Finances: {stats.finances}</Text>
+        <Text style={[styles.statsText, { color: populationColor }]}>👫​ Population: {stats.population}</Text>
+        <Text style={[styles.statsText, { color: financesColor }]}>💸​ Finances: {stats.finances}</Text>
       </View>
     </GestureHandlerRootView>
   );
