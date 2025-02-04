@@ -4,6 +4,7 @@ import "react-native-reanimated";
 import Animated, { useSharedValue, withTiming, useAnimatedStyle, withSpring, runOnJS, useAnimatedGestureHandler } from "react-native-reanimated";
 import { PanGestureHandler, GestureHandlerRootView } from "react-native-gesture-handler";
 import { Audio } from "expo-av";
+import { Link } from "expo-router";
 import { useGame } from "../context/GameContext";
 
 import BackgroundSVG from "../../assets/img/backgroundCard.svg";
@@ -242,7 +243,10 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
               <Text style={styles.winStats}>💸​ Finances</Text>
               <Text style={[styles.winStats, { color: "#D2367A", fontWeight: "900" }]}>{stats.finances}</Text>
             </View>
-            <HomeButton />
+            {/* <HomeButton /> */}
+            <Link href={`/`} style={styles.homeBtn}>
+              Retour au menu
+            </Link>
             <LikeButton deckId={parseInt(deckId)} />
           </View>
         ) : isGameFailed ? (
@@ -258,7 +262,10 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
               <Text style={styles.loseStats}>💸​ Finances</Text>
               <Text style={[styles.loseStats, { color: "#D2367A", fontWeight: "900" }]}>{stats.finances}</Text>
             </View>
-            <HomeButton />
+            {/* <HomeButton /> */}
+            <Link href={`/`} style={styles.homeBtn}>
+              Retour au menu
+            </Link>
           </View>
         ) : cards[currentIndex] ? (
           <>
@@ -386,7 +393,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   winText: {
-    fontSize: 50,
+    fontSize: 40,
     fontWeight: 700,
     textAlign: "center",
     color: "#36206D",
@@ -415,7 +422,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   loseText: {
-    fontSize: 50,
+    fontSize: 40,
     fontWeight: 700,
     textAlign: "center",
     color: "red",
@@ -446,5 +453,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 700,
     color: "#36206D",
+  },
+  homeBtn: {
+    textAlign: "center",
+    backgroundColor: "#D2367A",
+    padding: 6,
+    marginTop: 15,
+    borderRadius: 8,
+    color: "white",
+    fontWeight: 600,
+    fontSize: 18,
+    width: "100%",
   },
 });
