@@ -18,10 +18,11 @@ export default function App() {
     nb_jaime: number;
   };
   const [data, setData] = useState<Deck[] | null>(null);
-  // Déclaration de l'état `data`, initialisé à `null`, qui contiendra un tableau de tricks ou `null` s'il n'y a pas de données.
+  // Déclaration de l'état `data`, initialisé à `null`, qui contiendra un tableau ou `null` s'il n'y a pas de données.
 
   const [error, setError] = useState<Error | null>(null);
   // Déclaration de l'état `error`, initialisé à `null`, qui contiendra une erreur en cas de problème avec l'API.
+
   const [searchQuery, setSearchQuery] = useState("");
   // État pour la recherche
 
@@ -33,8 +34,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    // fetchData("https://srochedix.alwaysdata.net/ReignApi/api/v1/decks")
-    fetchData("https://srochedix.alwaysdata.net/ReignApi/api/v1/decksnew")
+    fetchData("https://srochedix.alwaysdata.net/ReignApi/api/v1/decks")
       .then((result) => {
         console.log("API Response:", result);
         if (result.status === "success" && Array.isArray(result.decks)) {
@@ -44,7 +44,7 @@ export default function App() {
         }
       })
       .catch((err) => {
-        console.error("API Error:", err); // Affiche l'erreur complète dans la console pour le débogage
+        console.error("API Error:", err);
         setError(err);
       });
   }, []);
@@ -77,7 +77,6 @@ export default function App() {
       <Text style={styles.title}>
         Choisissez le deck que <Text style={{ color: "#D2367A" }}>vous voulez jouer</Text>
       </Text>
-      {/* Search Bar */}
       <TextInput
         style={styles.searchInput}
         placeholder="Rechercher par nom de deck..."
@@ -88,7 +87,7 @@ export default function App() {
 
       <View style={styles.deckContainer}>
         <ScrollView
-          contentContainerStyle={styles.scrollContent} // Nouveau style pour ScrollView
+          contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled" // Permet la saisie tout en scrollant
         >
           <View style={styles.deckContainer}>
@@ -107,7 +106,7 @@ export default function App() {
                       <Text style={[styles.deckCartesAtm, { fontSize: 14 }]}>cartes</Text>
                     </View>
                   </View>
-                  <Text style={styles.deckDateFin}>{formatDate(deck.date_fin_deck)}</Text>
+                  <Text style={styles.deckDateFin}>Fin : {formatDate(deck.date_fin_deck)}</Text>
                   <View style={styles.deckLikes}>
                     <Text>{deck.nb_jaime}❤️</Text>
                   </View>

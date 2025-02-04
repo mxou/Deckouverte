@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LikeIcon from "./../../assets/img/like_icon.svg";
 
 interface LikeButtonProps {
-  deckId: number; // Assurez-vous que le type est cohérent
+  deckId: number;
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({ deckId }) => {
@@ -38,8 +38,19 @@ const LikeButton: React.FC<LikeButtonProps> = ({ deckId }) => {
   };
 
   const playSound = async (soundFile: any) => {
-    const { sound } = await Audio.Sound.createAsync(soundFile);
-    await sound.playAsync();
+    try {
+      const { sound } = await Audio.Sound.createAsync(soundFile);
+      await sound.playAsync();
+
+      // Vérifie si le son est terminé et libère la mémoire
+      sound.setOnPlaybackStatusUpdate(async (status) => {
+        if (status && "didJustFinish" in status && status.didJustFinish) {
+          await sound.unloadAsync();
+        }
+      });
+    } catch (error) {
+      console.error("Erreur lors de la lecture du son :", error);
+    }
   };
 
   const playYaySound = () => playSound(require("./../../assets/audio/winYaySound.mp3"));
@@ -55,7 +66,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ deckId }) => {
 
         await likeDeckApi();
 
-        alert("Merci d'avoir liké ce deck !");
+        // alert("Merci d'avoir liké ce deck !");
         console.log("Deck liké : ", deckId);
         setCanLike(false);
       }

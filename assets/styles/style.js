@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    alignItems: "flex-start", // Permet de bien aligner les cartes
+    alignItems: "flex-start",
     flex: 1,
   },
   deckCard: {

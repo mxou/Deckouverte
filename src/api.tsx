@@ -8,11 +8,10 @@ export async function fetchData(url: string) {
 
     return await response.json();
   } catch (error) {
-    // Ajoute un typage pour s'assurer que l'erreur est gérée
     if (error instanceof Error) {
       throw error;
     } else {
-      throw new Error('An unknown error occurred');
+      throw new Error("An unknown error occurred");
     }
   }
 }

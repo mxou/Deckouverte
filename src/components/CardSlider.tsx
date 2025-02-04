@@ -77,8 +77,19 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
   }, [cards]);
 
   const playSound = async (soundFile: any) => {
-    const { sound } = await Audio.Sound.createAsync(soundFile);
-    await sound.playAsync();
+    try {
+      const { sound } = await Audio.Sound.createAsync(soundFile);
+      await sound.playAsync();
+
+      // Vérifie si le son est terminé et libère la mémoire
+      sound.setOnPlaybackStatusUpdate(async (status) => {
+        if (status && "didJustFinish" in status && status.didJustFinish) {
+          await sound.unloadAsync();
+        }
+      });
+    } catch (error) {
+      console.error("Erreur lors de la lecture du son :", error);
+    }
   };
 
   const playSwipeSound = () => playSound(require("./../../assets/audio/swipeSound.mp3"));
@@ -111,12 +122,6 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
     // Mettre à jour les stats globales
     updateStats(populationChange, financesChange);
 
-    // Vérifier si la partie est perdue
-    // if (newPopulation <= 0 || newFinances <= 0 || newPopulation >= 100 || newFinances >= 100) {
-    //   setIsGameFailed(true);
-    //   return; // Stop ici, inutile de mettre à jour l'index des cartes
-    // }
-
     // Vérifier si la population a augmenté ou diminué
     if (newPopulation > previousPopulation) {
       setPopulationColor("green");
@@ -131,7 +136,7 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
       setFinancesColor("red");
     }
 
-    // Après 0.2s, revenir à la couleur par défaut
+    // Après 0.8s, revenir à la couleur par défaut
     setTimeout(() => {
       setPopulationColor("#444");
       setFinancesColor("#444");
@@ -243,7 +248,6 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
               <Text style={styles.winStats}>💸​ Finances</Text>
               <Text style={[styles.winStats, { color: "#D2367A", fontWeight: "900" }]}>{stats.finances}</Text>
             </View>
-            {/* <HomeButton /> */}
             <Link href={`/`} style={styles.homeBtn}>
               Retour au menu
             </Link>
@@ -262,7 +266,6 @@ export default function CardSlider({ cards, deckId }: CardSliderProps) {
               <Text style={styles.loseStats}>💸​ Finances</Text>
               <Text style={[styles.loseStats, { color: "#D2367A", fontWeight: "900" }]}>{stats.finances}</Text>
             </View>
-            {/* <HomeButton /> */}
             <Link href={`/`} style={styles.homeBtn}>
               Retour au menu
             </Link>
@@ -340,7 +343,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    overflow: "hidden", // Assurez-vous que le contenu reste dans les limites
+    overflow: "hidden",
     shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
@@ -350,8 +353,8 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 18,
     textAlign: "center",
-    color: "#fff", // Changez selon vos besoins
-    zIndex: 1, // S'assurer que le texte est au-dessus du SVG
+    color: "#fff",
+    zIndex: 1,
   },
   noMoreCards: {
     fontSize: 18,
@@ -360,8 +363,8 @@ const styles = StyleSheet.create({
   },
   fullScreenContainer: {
     position: "absolute",
-    width: "100%", // Prend toute la largeur de l'écran
-    height: "100%", // Prend toute la hauteur de l'écran
+    width: "100%",
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -369,11 +372,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: "90%",
     transform: [{ translateY: -20 }], // Centre verticalement sans flex
-    // backgroundColor: "rgba(0, 0, 0, 0.7)",
     backgroundColor: "#D2367A",
     paddingVertical: 8,
     paddingHorizontal: 12,
-    // borderRadius: 8,
     maxWidth: "70%",
   },
   swipeText: {
@@ -383,11 +384,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   swipeContainerLeft: {
-    left: -21, // Bien collé au bord gauche
+    left: -21,
   },
 
   swipeContainerRight: {
-    right: -21, // Bien collé au bord droit
+    right: -21,
   },
   winContainer: {
     alignItems: "center",

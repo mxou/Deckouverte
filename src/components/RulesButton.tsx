@@ -8,10 +8,7 @@ const RulesButton = () => {
   return (
     <View>
       {/* Bouton personnalisé dans le header */}
-      <Pressable
-        onPress={() => setModalVisible(true)}
-        style={styles.rulesButton} // Applique ici ton style personnalisé
-      >
+      <Pressable onPress={() => setModalVisible(true)} style={styles.rulesButton}>
         <Text style={styles.buttonText}>
           <InfoIcon width={80} height={80} stroke="#fff" />
         </Text>
@@ -78,14 +75,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#7f57de",
     borderRadius: 8,
     elevation: 3,
-    width: "80%", // ou un pourcentage ajusté
-    maxHeight: 40, // Limiter la hauteur maximale
+    width: 40,
+    maxHeight: 40,
   },
 
   buttonText: {
-    color: "white", // Couleur du texte du bouton
-    fontSize: 10, // Taille du texte
-    fontWeight: "bold", // Tu peux ajouter ou modifier d'autres propriétés du texte ici
+    color: "white",
+    fontSize: 10,
+    fontWeight: "bold",
   },
 });
 

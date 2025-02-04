@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import HomeButton from "./HomeButton";
 import RulesButton from "./RulesButton";
-import Logo from "./../../assets/img/logo_deckouverte.svg"; // Import direct du fichier SVG
+import Logo from "./../../assets/img/logo_deckouverte.svg";
 
 const Header = () => {
   return (

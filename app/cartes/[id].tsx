@@ -20,10 +20,10 @@ type Card = {
 };
 
 export default function CartesScreen() {
-  const { id } = useLocalSearchParams(); // Récupère l'ID du deck depuis l'URL
+  const { id } = useLocalSearchParams();
   console.log(id);
   const [cards, setCards] = useState<Card[]>([]);
-  const [deckTitle, setDeckTitle] = useState<string>(""); // Ajout du titre
+  const [deckTitle, setDeckTitle] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -36,7 +36,6 @@ export default function CartesScreen() {
 
     fetchData(`https://srochedix.alwaysdata.net/ReignApi/api/v1/cartes/deck/${id}`)
       .then((result) => {
-        // console.log("Réponse API :", result);
         if (result.status === "success" && result.deck && Array.isArray(result.deck.cartes)) {
           setCards(result.deck.cartes);
           setDeckTitle(result.deck.titre_deck || "Deck Inconnu"); //Récupération du titre
@@ -48,7 +47,6 @@ export default function CartesScreen() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  // if (loading) return <ActivityIndicator size="large" color="#fc035e" />;
   if (loading) return <LoadingDisplay />;
   if (error) return <ErrorDisplay error={error} />;
 
